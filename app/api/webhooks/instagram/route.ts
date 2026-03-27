@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { adminDb, adminAuth, serverTimestamp } from '@/lib/firebase-admin';
 import { decrypt } from '@/lib/encryption';
 import { sendInstagramPrivateReply } from '@/lib/meta';
 

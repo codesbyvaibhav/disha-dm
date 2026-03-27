@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminDb, adminAuth } from '@/lib/firebase-admin';
+import { adminDb, adminAuth, serverTimestamp } from '@/lib/firebase-admin';
 import { encrypt } from '@/lib/encryption';
 import { fetchMetaLongLivedToken, fetchMetaPages } from '@/lib/meta';
 
