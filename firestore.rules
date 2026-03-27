@@ -1,0 +1,148 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId}
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required)
+    //   - displayName: string
+    //   - createdAt: timestamp
+    //   - instagramAccountId: string
+    //   - instagramAccessToken: string (encrypted)
+    //   - instagramPageId: string
+    //
+    // Collection: campaigns
+    // Document ID: {campaignId}
+    // Fields:
+    //   - id: string
+    //   - userId: string (required)
+    //   - name: string (required)
+    //   - keywords: list (required)
+    //   - matchType: string (enum: exact, contains)
+    //   - replyTemplate: string (required)
+    //   - isActive: bool
+    //   - applyToAll: bool
+    //   - specificPostIds: list
+    //   - cooldownMinutes: number
+    //   - sendOncePerPost: bool
+    //   - createdAt: timestamp
+    //
+    // Collection: leads
+    // Document ID: {leadId}
+    // Fields:
+    //   - id: string
+    //   - userId: string (required)
+    //   - campaignId: string
+    //   - commenterUsername: string (required)
+    //   - commenterId: string
+    //   - commentText: string (required)
+    //   - matchedKeyword: string
+    //   - mediaId: string
+    //   - status: string (enum: sent, failed, pending)
+    //   - failureReason: string
+    //   - createdAt: timestamp
+    //
+    // Collection: logs
+    // Document ID: {logId}
+    // Fields:
+    //   - id: string
+    //   - userId: string (required)
+    //   - action: string (required)
+    //   - details: string
+    //   - createdAt: timestamp
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "vaibhavharshit9@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return data.uid is string && data.uid.size() > 0 &&
+             data.email is string && isValidEmail(data.email);
+    }
+
+    function isValidCampaign(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.keywords is list && data.keywords.size() <= 20 &&
+             data.replyTemplate is string && data.replyTemplate.size() < 1000;
+    }
+
+    function isValidLead(data) {
+      return data.userId is string &&
+             data.commenterUsername is string && data.commenterUsername.size() < 100 &&
+             data.commentText is string && data.commentText.size() < 2000;
+    }
+
+    function isValidLog(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.action is string && data.action.size() < 100;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && 
+                    (!('role' in request.resource.data) || isAdmin());
+    }
+
+    match /campaigns/{campaignId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidCampaign(request.resource.data);
+      allow update: if isAuthenticated() && isDocOwner() && isValidCampaign(request.resource.data);
+      allow delete: if isAuthenticated() && isDocOwner();
+    }
+
+    match /leads/{leadId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidLead(request.resource.data);
+      allow update: if isAuthenticated() && isDocOwner() && isValidLead(request.resource.data);
+      allow delete: if isAuthenticated() && isDocOwner();
+    }
+
+    match /logs/{logId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidLog(request.resource.data);
+    }
+  }
+}

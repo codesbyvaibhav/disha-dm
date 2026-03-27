@@ -1,0 +1,89 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "App user profile and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "instagramAccountId": { "type": "string", "description": "Linked IG Professional ID" },
+        "instagramAccessToken": { "type": "string", "description": "Encrypted long-lived token" },
+        "instagramPageId": { "type": "string", "description": "Facebook Page ID linked to IG" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Campaign": {
+      "title": "Campaign",
+      "description": "Automation rules for comments",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "matchType": { "type": "string", "enum": ["exact", "contains"] },
+        "replyTemplate": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "applyToAll": { "type": "boolean" },
+        "specificPostIds": { "type": "array", "items": { "type": "string" } },
+        "cooldownMinutes": { "type": "number" },
+        "sendOncePerPost": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "keywords", "replyTemplate"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Captured commenter data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "campaignId": { "type": "string" },
+        "commenterUsername": { "type": "string" },
+        "commenterId": { "type": "string" },
+        "commentText": { "type": "string" },
+        "matchedKeyword": { "type": "string" },
+        "mediaId": { "type": "string" },
+        "status": { "type": "string", "enum": ["sent", "failed", "pending"] },
+        "failureReason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "commenterUsername", "commentText"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "System event logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "action", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/campaigns/{campaignId}": {
+      "schema": "Campaign",
+      "description": "Automation campaigns"
+    },
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Captured leads"
+    },
+    "/logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Audit logs"
+    }
+  }
+}
