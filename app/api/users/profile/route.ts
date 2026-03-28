@@ -9,13 +9,13 @@ export async function POST(request: Request) {
   }
 
   try {
-    await adminDb.collection('users').doc(userId).update({
+    await adminDb.collection('users').doc(userId).set({
       instagramAccountId,
       instagramUsername,
       instagramPageId,
       instagramAccessToken: accessToken,
       updatedAt: new Date()
-    });
+}, { merge: true });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

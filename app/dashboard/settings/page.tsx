@@ -75,7 +75,7 @@ export default function SettingsPage() {
       // 3. Listen for success message from popup
       const handleMessage = async (event: MessageEvent) => {
         const origin = event.origin;
-        if (!origin.endsWith('.run.app') && !origin.includes('localhost')) return;
+        if (origin !== window.location.origin) return;
         
         if (event.data?.type === 'OAUTH_AUTH_SUCCESS') {
           const { accessToken, instagramAccountId, instagramUsername, instagramPageId } = event.data.data;
