@@ -78,15 +78,15 @@ export default function LeadsPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Leads</h1>
           <p className="text-slate-500">View and manage the leads captured from your automations.</p>
         </div>
         <button 
           onClick={exportLeads}
-          className="px-6 py-3 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm"
+          className="w-full sm:w-auto px-6 py-3 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm"
         >
           <Download className="w-5 h-5" />
           Export CSV
@@ -94,7 +94,7 @@ export default function LeadsPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input 
@@ -113,12 +113,12 @@ export default function LeadsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Commenter</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Comment</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Keyword</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Action</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Commenter</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Comment</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Keyword</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Date</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -131,7 +131,7 @@ export default function LeadsPage() {
               ) : filteredLeads.length > 0 ? (
                 filteredLeads.map((lead) => (
                   <tr key={lead.id} className="hover:bg-slate-50/50 transition-colors group">
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 text-xs font-bold">
                           {lead.commenterUsername[0].toUpperCase()}
@@ -139,15 +139,15 @@ export default function LeadsPage() {
                         <span className="font-bold text-slate-900">@{lead.commenterUsername}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm text-slate-600 max-w-xs truncate italic">&quot;{lead.commentText}&quot;</p>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
+                      <p className="text-sm text-slate-600 max-w-[150px] sm:max-w-xs break-words italic">&quot;{lead.commentText}&quot;</p>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <span className="px-2 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-medium">
                         {lead.matchedKeyword}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <div className="flex items-center gap-2">
                         {lead.status === 'sent' ? (
                           <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
@@ -167,12 +167,12 @@ export default function LeadsPage() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <span className="text-xs text-slate-500 font-medium">
                         {lead.createdAt?.toDate ? format(lead.createdAt.toDate(), 'MMM d, HH:mm') : 'Just now'}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <a 
                         href={`https://instagram.com/reels/${lead.mediaId}`} 
                         target="_blank" 

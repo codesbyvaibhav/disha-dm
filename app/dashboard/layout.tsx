@@ -25,8 +25,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      <DashboardSidebar />
-      <main className="flex-1 ml-64 p-8">
+      <div className="hidden md:block">
+        <DashboardSidebar />
+      </div>
+
+      <main className="flex-1 w-full p-4 sm:p-6 md:ml-64">
         <div className="max-w-6xl mx-auto">
           {children}
         </div>

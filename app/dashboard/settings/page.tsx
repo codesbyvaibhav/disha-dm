@@ -114,8 +114,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Settings</h1>
           <p className="text-slate-500">Manage your account and connected platforms.</p>
@@ -125,7 +125,7 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Profile Section */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-4">
             <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
               <UserIcon className="w-5 h-5 text-indigo-600" /> Profile Information
             </h3>
@@ -230,7 +230,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Sidebar Settings */}
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
             <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
               <Shield className="w-5 h-5 text-indigo-600" /> Security

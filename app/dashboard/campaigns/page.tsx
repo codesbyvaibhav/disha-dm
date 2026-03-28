@@ -126,7 +126,7 @@ export default function CampaignsPage() {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Campaigns</h1>
@@ -138,7 +138,7 @@ export default function CampaignsPage() {
             setFormData({ name: '', keywords: '', matchType: 'exact', replyTemplate: '', isActive: true });
             setIsModalOpen(true);
           }}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/20"
+          className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/20"
         >
           <Plus className="w-5 h-5" />
           New Campaign
@@ -146,7 +146,7 @@ export default function CampaignsPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input 
@@ -252,7 +252,7 @@ export default function CampaignsPage() {
             <p className="text-slate-500 mb-8">Start by creating your first automation campaign.</p>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all"
+              className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all"
             >
               Create Campaign
             </button>
@@ -275,7 +275,7 @@ export default function CampaignsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden"
+              className="relative bg-white w-full max-w-xl mx-2 sm:mx-0 rounded-3xl shadow-2xl overflow-hidden"
             >
               <div className="p-8">
                 <h2 className="text-2xl font-extrabold text-slate-900 mb-6">
@@ -305,7 +305,7 @@ export default function CampaignsPage() {
                     />
                     <p className="text-[10px] text-slate-400 mt-2">Separate multiple keywords with commas.</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-bold text-slate-700 mb-2">Match Type</label>
                       <select 
