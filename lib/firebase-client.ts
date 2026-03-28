@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore'; // Import getFirestore
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,5 +14,8 @@ const firebaseConfig = {
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+
+// CHANGE THIS LINE: Provide your specific database ID as the second argument
+export const db = getFirestore(app, "ai-studio-b2c6eb8f-7fdc-4097-b205-cce227549d31");
+
 export default app;
