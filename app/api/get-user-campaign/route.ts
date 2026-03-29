@@ -1,41 +1,42 @@
-import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { NextResponse } from 'next/server';
+import { adminDb } from '@/lib/firebase-admin';
 
-export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId");
-
-  if (!userId) {
-    return Response.json({ error: "Missing userId" }, { status: 400 });
-  }
-
+export async function GET(req: Request) {
   try {
-    const q = query(
-      collection(db, "campaigns"),
-      where("userId", "==", userId)
-    );
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get('userId');
 
-    const snapshot = await getDocs(q);
+    if (!userId) {
+      return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
+    }
+
+    const snapshot = await adminDb
+      .collection('campaigns')
+      .where('userId', '==', userId)
+      .where('isActive', '==', true)
+      .limit(1)
+      .get();
 
     if (snapshot.empty) {
-      return Response.json({
+      return NextResponse.json({
         keywords: [],
-        matchType: "contains",
-        replyTemplate: ""
+        matchType: 'contains',
+        replyTemplate: '',
       });
     }
 
-    const doc = snapshot.docs[0];
-    const data = doc.data();
+    const doc = snapshot.docs[0].data();
 
-    return Response.json({
-      keywords: data.keywords || [],
-      matchType: data.matchType || "contains",
-      replyTemplate: data.replyTemplate || ""
+    return NextResponse.json({
+      keywords: doc.keywords || [],
+      matchType: doc.matchType || 'contains',
+      replyTemplate: doc.replyTemplate || '',
     });
-
   } catch (error) {
-    console.error(error);
-    return Response.json({ error: "Server error" }, { status: 500 });
+    console.error('Error fetching campaign:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch campaign' },
+      { status: 500 }
+    );
   }
 }
