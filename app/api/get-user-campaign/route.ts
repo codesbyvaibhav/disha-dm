@@ -1,14 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 
-export async function GET(req: NextRequest) {
-  const userId = req.nextUrl.searchParams.get('userId');
-
-  if (!userId) {
-    return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
-  }
-
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
+    }
+
     const snapshot = await adminDb
       .collection('campaigns')
       .where('userId', '==', userId)
@@ -24,13 +25,14 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const campaign = snapshot.docs[0].data();
+    const doc = snapshot.docs[0].data();
 
     return NextResponse.json({
-      keywords: campaign.keywords || [],
-      matchType: campaign.matchType || 'contains',
-      replyTemplate: campaign.replyTemplate || '',
+      keywords: doc.keywords || [],
+      matchType: doc.matchType || 'contains',
+      replyTemplate: doc.replyTemplate || '',
     });
+
   } catch (error) {
     console.error('Error fetching campaign:', error);
     return NextResponse.json(

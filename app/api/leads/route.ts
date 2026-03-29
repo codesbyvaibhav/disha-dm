@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminDb, adminAuth, serverTimestamp } from '@/lib/firebase-admin';
+import { adminDb, serverTimestamp } from '@/lib/firebase-admin';
 
 export async function POST(req: Request) {
   try {
@@ -16,16 +16,25 @@ export async function POST(req: Request) {
 
     if (!userId || !commenterUsername || !commentText || !matchedKeyword || !mediaId) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        {
+          error: 'Missing required fields',
+          debug: {
+            userId,
+            commenterUsername,
+            commentText,
+            matchedKeyword,
+            mediaId,
+          },
+        },
         { status: 400 }
       );
     }
 
-    const userRecord = await adminAuth.getUser(userId).catch(() => null);
+    const userDoc = await adminDb.collection('users').doc(userId).get();
 
-    if (!userRecord) {
+    if (!userDoc.exists) {
       return NextResponse.json(
-        { error: 'Invalid userId' },
+        { error: 'Invalid userId - user doc not found in Firestore' },
         { status: 400 }
       );
     }
