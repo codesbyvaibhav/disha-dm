@@ -11,11 +11,10 @@ export async function GET(req: Request) {
     }
 
     const snapshot = await adminDb
-      .collection('campaigns')
-      .where('userId', '==', userId)
-      .where('isActive', '==', true)
-      .limit(1)
-      .get();
+    .collection('campaigns')
+    .where('userId', '==', userId)
+    .limit(1)
+    .get();
 
     return NextResponse.json({
       debug: {
