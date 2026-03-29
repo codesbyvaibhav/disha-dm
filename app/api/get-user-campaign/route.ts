@@ -17,25 +17,24 @@ export async function GET(req: Request) {
       .limit(1)
       .get();
 
-    if (snapshot.empty) {
-      return NextResponse.json({
-        keywords: [],
-        matchType: 'contains',
-        replyTemplate: '',
-      });
-    }
-
-    const doc = snapshot.docs[0].data();
-
     return NextResponse.json({
-      keywords: doc.keywords || [],
-      matchType: doc.matchType || 'contains',
-      replyTemplate: doc.replyTemplate || '',
+      debug: {
+        userId,
+        empty: snapshot.empty,
+        size: snapshot.size,
+        projectId: process.env.FIREBASE_PROJECT_ID || null,
+        databaseId: process.env.FIRESTORE_DATABASE_ID || null,
+      },
+      data: snapshot.empty ? null : snapshot.docs[0].data(),
     });
-  } catch (error) {
-    console.error('Error fetching campaign:', error);
+  } catch (error: any) {
     return NextResponse.json(
-      { error: 'Failed to fetch campaign' },
+      {
+        error: 'Failed to fetch campaign',
+        details: error?.message || String(error),
+        projectId: process.env.FIREBASE_PROJECT_ID || null,
+        databaseId: process.env.FIRESTORE_DATABASE_ID || null,
+      },
       { status: 500 }
     );
   }
